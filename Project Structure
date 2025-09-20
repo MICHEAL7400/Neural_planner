@@ -1,0 +1,13 @@
+neural-planner/
+├── backend/
+│   ├── server.js          # Express server & API routes
+│   ├── db.js              # Database configuration
+│   ├── .env               # Environment variables
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   │   ├── App.js         # Main React component
+│   │   ├── App.css        # Custom styles
+│   │   └── theme.js       # Material-UI theme
+│   └── package.json
+└── README.md
