@@ -196,6 +196,64 @@ app.get("/api/weather-suggestion", async (req, res) => {
   }
 });
 
+// Cost API endpoint
+app.get("/api/cost", async (req, res) => {
+  try {
+    const costApiKey = process.env.COST_API_KEY;
+    const { city = "Lusaka" } = req.query; // if the cost API uses location
+
+    // Replace with your actual cost API URL
+    const response = await axios.get(`https://api.example.com/cost?apikey=${costApiKey}&city=${city}`);
+    
+    res.json(response.data);
+  } catch (error) {
+    console.error("Cost API error:", error.message);
+    // Return mock data if API fails
+    res.json({
+      costPerUnit: 0.12,
+      currency: "USD",
+      city: req.query.city || "Lusaka"
+    });
+  }
+});
+
+// Combined Weather + Cost suggestion endpoint
+app.get("/api/weather-cost-suggestion", async (req, res) => {
+  try {
+    const { city = "Lusaka" } = req.query;
+
+    // Fetch weather
+    const weatherResponse = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.WEATHER_API_KEY}&units=metric`);
+    const weather = {
+      temperature: weatherResponse.data.main.temp,
+      description: weatherResponse.data.weather[0].description,
+      humidity: weatherResponse.data.main.humidity,
+      windSpeed: weatherResponse.data.wind.speed,
+      city: weatherResponse.data.name
+    };
+
+    // Fetch cost
+    const costResponse = await axios.get(`https://api.example.com/cost?apikey=${process.env.COST_API_KEY}&city=${city}`);
+    const cost = costResponse.data;
+
+    // Suggestion logic (example)
+    let suggestion = "";
+    if (weather.temperature > 30) {
+      suggestion = "Hot day! Do indoor tasks during peak hours to save energy costs.";
+    } else if (weather.description.includes("rain")) {
+      suggestion = "Rainy day. Good for indoor focused work.";
+    } else {
+      suggestion = "Normal weather. Balance tasks and energy usage.";
+    }
+
+    res.json({ weather, cost, suggestion });
+  } catch (error) {
+    console.error("Weather + Cost API error:", error.message);
+    res.status(500).json({ error: "Failed to fetch combined data" });
+  }
+});
+
+
 // Health check
 app.get("/api/health", (req, res) => {
   res.json({ status: "OK", timestamp: new Date().toISOString() });
