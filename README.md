@@ -32,3 +32,15 @@
    ```bash
    git clone https://github.com/MICHEAL7400/Neural_planner.git
    cd neural-planner
+
+   ## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📞 Support
+
+For support or questions, please open an issue on GitHub or contact the development team.
+
+---
+
+**Built with ❤️ using React.js and Node.js**
